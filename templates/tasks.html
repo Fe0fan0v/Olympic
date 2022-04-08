@@ -3,9 +3,9 @@
 {% block content %}
 
 <h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
-{% if not team.is_authenticated %}
-    <h2 class="uk-heading-line uk-text-center"><span><a href="/">Зарегистрируйтесь</a></span></h2>
+{% if current_user.is_authenticated %}
+    <h2 class="uk-heading-line uk-text-center"><span>{{ current_user.name }}</span></h2>
 {% else %}
-    <h2 class="uk-heading-line uk-text-center"><span>team.name</span></h2>
+    <h2 class="uk-heading-line uk-text-center"><span><a href="/">Зарегистрируйтесь</a></span></h2>
 {% endif %}
 {% endblock %}

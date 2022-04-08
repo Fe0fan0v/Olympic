@@ -2,23 +2,42 @@
 
 {% block content %}
 
-<h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
-<form method="post" class="uk-position-center">
-    {{ form.csrf_token }}
-    {{ form.hidden_tag() }}
-    <div class="uk-margin">
-        <div class="uk-inline">
-            <span class="uk-form-icon" uk-icon="icon: users"></span>
-            {{ form.team(class="uk-input", type="text", placeholder="Название команды") }}
+    <h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
+    <form method="post" class="uk-position-center">
+        {{ form.csrf_token }}
+        {{ form.hidden_tag() }}
+        <div class="uk-margin">
+            <div class="uk-inline">
+                <span class="uk-form-icon" uk-icon="icon: users"></span>
+                {{ form.team(class="uk-input", type="text", placeholder="Название команды") }}
+            </div>
+            {% for error in form.errors %}
+                <div class="uk-alert-danger uk-align-center" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p class="uk-text-center">{{ error }}</p>
+                </div>
+            {% endfor %}
         </div>
-    </div>
 
-    <div class="uk-margin">
-        <div class="uk-inline">
-            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: bell"></span>
-            {{ form.school(class="uk-input", type="text", placeholder="Номер школы") }}
+        <div class="uk-margin">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: bell"></span>
+                {{ form.school(class="uk-input", type="text", placeholder="Номер школы") }}
+            </div>
+            {% for error in form.errors %}
+                <div class="uk-alert-danger uk-align-center" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p class="uk-text-center">{{ error }}</p>
+                </div>
+            {% endfor %}
         </div>
-    </div>
-    {{ form.submit(class="uk-button uk-button-primary uk-align-center") }}
-</form>
+        {{ form.submit(class="uk-button uk-button-primary uk-align-center") }}
+
+        </div>
+    </form>
+    {% if message %}
+        <div class="uk-alert-danger uk-align-center" uk-alert>
+        <a class="uk-alert-close" uk-close></a>
+        <p class="uk-text-center">{{ message }}</p>
+    {% endif %}
 {% endblock %}
