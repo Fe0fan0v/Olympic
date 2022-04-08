@@ -22,9 +22,14 @@ def main():
         school = form.school.data
         team = Team(team, school)
         login_user(team, remember=True)
-        print('User logined')
         return redirect('/tasks')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/tasks')
+def tasks():
+    team = current_user
+    return render_template('tasks.html', title='Задания', team=team)
 
 
 app.run()

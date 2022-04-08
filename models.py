@@ -20,10 +20,3 @@ class Team:
         self.school = school
         self.scores = scores
         self.position = position
-        self.is_active = False
-
-    def get_id(self):
-        return self.name
-
-
-
