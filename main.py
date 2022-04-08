@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect
-from forms import RegisterForm
+from forms import RegisterForm, TaskForm
 from flask_login import LoginManager, login_user, current_user, login_required
 from models import Task, Part
 from data import db_session
-from data.models import Team
+from data.models import Team, Task
 
 
 app = Flask(__name__)
@@ -38,7 +38,15 @@ def main():
 @login_required
 def tasks():
     team = current_user
-    return render_template('tasks.html', title='Задания', team=team)
+    form = TaskForm()
+    if form.validate_on_submit():
+        answer1 = form.part1_answer.data
+        answer2 = form.part2_answer.data
+        answer3 = form.part3_answer.data
+        answer4 = form.part4_answer.data
+        db_sess = db_session.create_session()
+        
+    return render_template('tasks.html', title='Задания', team=team, form=form)
 
 
 app.run()

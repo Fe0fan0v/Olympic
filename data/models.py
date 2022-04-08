@@ -11,3 +11,12 @@ class Team(SqlAlchemyBase, UserMixin):
     school = sqlalchemy.Column(sqlalchemy.String)
     scores = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     position = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+
+
+class Task(SqlAlchemyBase):
+    __tablename__ = 'tasks'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.String)
+    price = sqlalchemy.Column(sqlalchemy.Integer)
+    part = sqlalchemy.Column(sqlalchemy.String)
