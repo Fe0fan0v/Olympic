@@ -34,6 +34,8 @@ def main():
         if team:
             if team.school == school:
                 if not team.timer_started:
+                    if team.tasks_done:
+                        return render_template('login.html', title='Вход', form=form, message='Вы уже сдали задание')
                     time = datetime.datetime.now() + datetime.timedelta(seconds=10)
                     team.deadline = list(map(int, time.strftime("%Y-%m-%d-%H-%M-%S").split("-")))
                     team.timer_started = True
@@ -71,6 +73,7 @@ def stop_time():
     team = db_sess.query(Team).filter(Team.name == current_user.name).first()
     team.timer_started = False
     team.deadline = None
+    team.tasks_done = True
     db_sess.add(team)
     db_sess.commit()
     print(f'team {team.name} stopped')

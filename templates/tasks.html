@@ -19,14 +19,18 @@
                 </ul>
             </div>
         </nav>
-        {% if team.timer_started %}
-            <div class="timer uk-position-center">
-                <div class="timer_items uk-heading-large uk-text-center">
-                    <span class="timer_item timer_hours">00</span>
-                    <span class="timer_item timer_minutes">00</span>
-                    <span class="timer_item timer_seconds">00</span>
+        {% if team.task_done %}
+            {% if team.timer_started %}
+                <div class="timer uk-position-center">
+                    <div class="timer_items uk-heading-large uk-text-center">
+                        <span class="timer_item timer_hours">00</span>
+                        <span class="timer_item timer_minutes">00</span>
+                        <span class="timer_item timer_seconds">00</span>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <h1 class="uk-heading-large uk-text-center message">Время вышло</h1>
+            {% endif %}
         {% else %}
             <h1 class="uk-heading-large uk-text-center message">Время вышло</h1>
         {% endif %}
@@ -38,10 +42,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             // конечная дата, например 1 июля 2021
             const deadline = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(),
-                new Date().getHours(), new Date().getMinutes(), new Date().getSeconds() + 10);
+                {{ team.deadline[3] }}, {{ team.deadline[4] }}, new Date().getSeconds());
             // id таймера
             let timerId = null;
-
+            const stop_text = 'Время вышло';
             // склонение числительных
             function declensionNum(num, words) {
                 return words[(num % 100 > 4 && num % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(num % 10 < 5) ? num % 10 : 5]];
@@ -53,6 +57,10 @@
                 if (diff <= 0) {
                     clearInterval(timerId);
                     stopRequest();
+                    document.getElementsByClassName('timer')[0].style.display = 'none';
+                    var h = document.createElement('h1');
+                    h.className = 'uk-heading-large uk-text-center';
+                    document.body.appendChild(h);
                 }
                 const hours = diff > 0 ? Math.floor(diff / 1000 / 60 / 60) % 24 : 0;
                 const minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
@@ -67,10 +75,10 @@
 
             // отправляем на сервер запрос на выключение таймера
             function stopRequest() {
-                const url = 'http://127.0.0.1:5000/stop_timer';
-                fetch(url, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+                const request = new XMLHttpRequest();
+                request.open('GET', '/stop_time', true);
+                request.send()
             }
-
 
             // получаем элементы, содержащие компоненты даты
             const $hours = document.querySelector('.timer_hours');
