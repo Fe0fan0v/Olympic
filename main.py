@@ -1,14 +1,17 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, jsonify, after_this_request
 from forms import RegisterForm, TaskForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from models import Task, Part
 from data import db_session
 from data.models import Team, Task
 import datetime
+from flask_cors import CORS
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super_duper_secret_key'
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init("base.db")
@@ -31,7 +34,7 @@ def main():
         if team:
             if team.school == school:
                 if not team.timer_started:
-                    time = datetime.datetime.now() + datetime.timedelta(minutes=1)
+                    time = datetime.datetime.now() + datetime.timedelta(seconds=10)
                     team.deadline = list(map(int, time.strftime("%Y-%m-%d-%H-%M-%S").split("-")))
                     team.timer_started = True
                     db_sess.add(team)
@@ -60,6 +63,18 @@ def tasks():
         answer3 = form.part3_answer.data
         answer4 = form.part4_answer.data
     return render_template('tasks.html', title='Задания', team=team, form=form)
+
+
+@app.route('/stop_time', methods=['GET'])
+def stop_time():
+    db_sess = db_session.create_session()
+    team = db_sess.query(Team).filter(Team.name == current_user.name).first()
+    team.timer_started = False
+    team.deadline = None
+    db_sess.add(team)
+    db_sess.commit()
+    print(f'team {team.name} stopped')
+    return jsonify({'success': 'OK'})
 
 
 @app.route('/logout')
