@@ -2,10 +2,65 @@
 
 {% block content %}
 
-<h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
-{% if current_user.is_authenticated %}
-    <h2 class="uk-heading-line uk-text-center"><span>{{ current_user.name }}</span></h2>
-{% else %}
-    <h2 class="uk-heading-line uk-text-center"><span><a href="/">Зарегистрируйтесь</a></span></h2>
-{% endif %}
+    <h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
+    {% if current_user.is_authenticated %}
+        <nav class="uk-navbar-container uk-margin" uk-navbar>
+            <div class="uk-navbar-left">
+                <a class="uk-navbar-item uk-logo" href="#">{{ current_user.name }}</a>
+            </div>
+            <div class="uk-navbar-right">
+                <ul class="uk-navbar-nav">
+                    <li>
+                        <a href="/logout">
+                            <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span>
+                            Выйти
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% if team.timer_started %}
+            <div class="timer uk-position-center">
+                <div class="timer_items uk-heading-large uk-text-center">
+                    <span class="timer_item timer_hours" id="timer-hours">00</span>
+                    <span class="timer_item timer_minutes" id="timer-mins">00</span>
+                    <span class="timer_item timer_seconds" id="timer-secs">00</span>
+                </div>
+            </div>
+        {% else %}
+            <h1 class="uk-heading-large uk-text-center">Время вышло</h1>
+        {% endif %}
+    {% else %}
+        <h2 class="uk-heading-line uk-text-center"><span><a href="/">Войдите в аккаунт</a></span></h2>
+    {% endif %}
+
+    <script>
+
+
+        var endDate = new Date({{ team.deadline[0] }}, {{ team.deadline[1] }}, {{ team.deadline[2] }},
+            {{ team.deadline[3] }}, {{ team.deadline[4] }}, {{ team.deadline[5] }});
+        var timer = setInterval(function () {
+            let now = new Date().getTime();
+            let t = endDate - now;
+
+            if (t >= 0) {
+
+                let hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let mins = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+                let secs = Math.floor((t % (1000 * 60)) / 1000);
+
+
+                document.getElementById("timer-hours").innerHTML = ("0" + hours).slice(-2);
+
+                document.getElementById("timer-mins").innerHTML = ("0" + mins).slice(-2);
+
+                document.getElementById("timer-secs").innerHTML = ("0" + secs).slice(-2);
+
+            } else {
+                document.getElementById("timer").innerHTML = "Время вышло!";
+
+            }
+
+        }, 1000);
+    </script>
 {% endblock %}

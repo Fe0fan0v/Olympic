@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired
 
 class RegisterForm(FlaskForm):
     team = StringField('Название команды', validators=[DataRequired()])
-    school = StringField('Название школы', validators=[DataRequired()])
-    submit = SubmitField('Зарегистрироваться')
+    school = StringField('Номер школы', validators=[DataRequired()])
+    submit = SubmitField('Войти')
 
 
 class TaskForm(FlaskForm):

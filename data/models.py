@@ -1,6 +1,8 @@
 import sqlalchemy
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
+from sqlalchemy.ext.mutable import MutableList
+from sqlalchemy.types import PickleType
 
 
 class Team(SqlAlchemyBase, UserMixin):
@@ -9,6 +11,8 @@ class Team(SqlAlchemyBase, UserMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String)
     school = sqlalchemy.Column(sqlalchemy.String)
+    deadline = sqlalchemy.Column(MutableList.as_mutable(PickleType), default=[])
+    timer_started = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     scores = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     position = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
