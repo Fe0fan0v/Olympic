@@ -11,6 +11,12 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li>
+                        <a href="/download">
+                            <span class="uk-icon uk-margin-small-right" uk-icon="icon: download"></span>
+                            Скачать задание
+                        </a>
+                    </li>
+                    <li>
                         <a href="/logout">
                             <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span>
                             Выйти
@@ -29,8 +35,7 @@
                     </div>
                 </div>
                 {#поля отправки заданий#}
-                <div class="uk-position-bottom-center uk-align-center">
-                    {% if not team.first_task_complete %}
+                <div class="uk-position-bottom-center uk-align-center" id="send_form">
                         <div class="uk-margin" id="first">
                             <input class="uk-input uk-form-width-medium" type="text" id="first_block"
                                    placeholder="Ответ 1 блока">
@@ -38,8 +43,6 @@
                                 Отправить
                             </button>
                         </div>
-                    {% endif %}
-                    {% if not team.second_task_complete %}
                         <div class="uk-margin" id="second">
                             <input class="uk-input uk-form-width-medium" type="text" id="second_block"
                                    placeholder="Ответ 2 блока">
@@ -47,8 +50,6 @@
                                     onclick="send_second_block()">Отправить
                             </button>
                         </div>
-                    {% endif %}
-                    {% if not team.third_task_complete %}
                         <div class="uk-margin" id="third">
                             <input class="uk-input uk-form-width-medium" type="text" id="third_block"
                                    placeholder="Ответ 3 блока">
@@ -56,8 +57,6 @@
                                 Отправить
                             </button>
                         </div>
-                    {% endif %}
-                    {% if not team.fourth_task_complete %}
                         <div class="uk-margin" id="fourth">
                             <input class="uk-input uk-form-width-medium" type="text" id="fourth_block"
                                    placeholder="Ответ 4 блока">
@@ -65,7 +64,6 @@
                             ">Отправить
                             </button>
                         </div>
-                    {% endif %}
                 </div>
             {% else %}
                 <h1 class="uk-heading-large uk-text-center message">Время вышло.</h1>
@@ -97,6 +95,7 @@
                 if (diff <= 0) {
                     clearInterval(timerId);
                     stopRequest();
+                    document.getElementById('send_form').style.display = 'none';
                     document.getElementsByClassName('timer')[0].style.display = 'none';
                     var h = document.createElement('h1');
                     h.className = 'uk-heading-large uk-text-center';
@@ -146,7 +145,7 @@
                 contentType: "application/json",
                 dataType: 'json',
             });
-            document.getElementById('first').style.display = 'none';
+            document.getElementById("first_block").value = "";
         }
 
         function send_second_block() {
@@ -161,7 +160,7 @@
                 contentType: "application/json",
                 dataType: 'json',
             });
-            document.getElementById('second').style.display = 'none';
+            document.getElementById("second_block").value = "";
         }
 
         function send_third_block() {
@@ -176,7 +175,7 @@
                 contentType: "application/json",
                 dataType: 'json',
             });
-            document.getElementById('third').style.display = 'none';
+            document.getElementById("third_block").value = "";
         }
 
         function send_fourth_block() {
@@ -191,17 +190,7 @@
                 contentType: "application/json",
                 dataType: 'json',
             });
-            document.getElementById('fourth').style.display = 'none';
+            document.getElementById("fourth_block").value = "";
         }
-    </script>
-    <script>
-    $("#body").on("load", function()
-         {
-            $.ajax({
-                url: "/download",
-                method: "get",
-                cache: false
-        });
-        });
     </script>
 {% endblock %}
