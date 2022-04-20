@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, jsonify, request
-from forms import RegisterForm, TaskForm
+from flask import Flask, render_template, redirect, jsonify, request, send_file
+from forms import RegisterForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from models import Task, Part
 from data import db_session
@@ -36,15 +36,14 @@ def main():
                 if not team.timer_started:
                     if team.tasks_done:
                         return render_template('login.html', title='Вход', form=form, message='Вы уже сдали задание')
-                    time = datetime.datetime.now() + datetime.timedelta(minutes=30)
+                    time = datetime.datetime.now() + datetime.timedelta(hours=1, minutes=30)
                     team.deadline = list(map(int, time.strftime("%Y-%m-%d-%H-%M-%S").split("-")))
                     team.timer_started = True
                     team.tasks_done = False
                     db_sess.add(team)
                     db_sess.commit()
-                    print('Session ended')
                     login_user(team)
-                    return redirect('/tasks')
+                    return redirect('/download')
                 else:
                     login_user(team)
                     return redirect('/tasks')
@@ -102,6 +101,13 @@ def stop_time():
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/download', methods=['GET'])
+def download():
+    if request.method == 'GET':
+        file_path = 'files/tasks.zip'
+        return send_file(file_path, as_attachment=True)
 
 
 if __name__ == '__main__':

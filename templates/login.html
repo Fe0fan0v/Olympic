@@ -32,12 +32,12 @@
             {% endfor %}
         </div>
         {{ form.submit(class="uk-button uk-button-primary uk-align-center") }}
-
-        </div>
     </form>
     {% if message %}
         <div class="uk-alert-danger uk-align-center" uk-alert>
         <a class="uk-alert-close" uk-close></a>
         <p class="uk-text-center">{{ message }}</p>
+        </div>
     {% endif %}
+
 {% endblock %}

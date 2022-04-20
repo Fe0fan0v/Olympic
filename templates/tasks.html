@@ -194,4 +194,14 @@
             document.getElementById('fourth').style.display = 'none';
         }
     </script>
+    <script>
+    $("#body").on("load", function()
+         {
+            $.ajax({
+                url: "/download",
+                method: "get",
+                cache: false
+        });
+        });
+    </script>
 {% endblock %}
