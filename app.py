@@ -42,7 +42,7 @@ def main():
                     team.tasks_done = False
                     db_sess.add(team)
                     db_sess.commit()
-                    db_sess.close()
+                    print('Session ended')
                     login_user(team)
                     return redirect('/tasks')
                 else:
@@ -60,44 +60,31 @@ def main():
 @login_required
 def tasks():
     if request.method == 'POST':
-        team = current_user
-        data = request.get_json()
-        if data['block_number'] == 1:
-            team.first_task_complete = True
-        if data['block_number'] == 2:
-            team.second_task_complete = True
-        if data['block_number'] == 3:
-            team.third_task_complete = True
-        if data['block_number'] == 4:
-            team.fourth_task_complete = True
-        return render_template('tasks.html', title='Задания', team=team)
+        if request.data:
+            team = current_user
+            data = request.get_json()
+            if data['block_number'] == 1:
+                team.first_task_complete = True
+            elif data['block_number'] == 2:
+                team.second_task_complete = True
+            elif data['block_number'] == 3:
+                team.third_task_complete = True
+            elif data['block_number'] == 4:
+                team.fourth_task_complete = True
+            db_sess = db_session.create_session()
+            team = db_sess.merge(team)
+            db_sess.add(team)
+            db_sess.commit()
+            return redirect('/tasks')
+        else:
+            team = current_user
+            return render_template('tasks.html', title='Задания', team=team)
     else:
         team = current_user
         return render_template('tasks.html', title='Задания', team=team)
 
 
-# @app.route('/receive_results', methods=['GET', 'POST'])
-# @login_required
-# def receive_results():
-#     if request.method == 'POST':
-#         db_sess = db_session.create_session()
-#         team = current_user
-#         data = request.get_json()
-#         if data['block_number'] == 1:
-#             team.first_task_complete = True
-#         if data['block_number'] == 2:
-#             team.second_task_complete = True
-#         if data['block_number'] == 3:
-#             team.third_task_complete = True
-#         if data['block_number'] == 4:
-#             team.fourth_task_complete = True
-#         db_sess.add(team)
-#         db_sess.commit()
-#         db_sess.close()
-#     return jsonify({'receive': 'ok'})
-
-
-@app.route('/stop_time', methods=['GET'])
+@app.route('/stop_time')
 def stop_time():
     db_sess = db_session.create_session()
     team = db_sess.query(Team).filter(Team.name == current_user.name).first()
@@ -106,7 +93,6 @@ def stop_time():
     team.tasks_done = True
     db_sess.add(team)
     db_sess.commit()
-    db_sess.close()
     print(f'team {team.name} stopped')
     return jsonify({'success': 'OK'})
 
