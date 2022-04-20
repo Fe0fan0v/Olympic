@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, jsonify, request, send_file
+from flask import Flask, render_template, redirect, jsonify, request, send_file, url_for
 from forms import RegisterForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from models import Task, Part
@@ -15,6 +15,11 @@ CORS(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init("base.db")
+ANSWERS = {'first': {'cltkfkltkjuekzqcvtkj': 1, '13240': 2, '57.92.113.225': 3, '2_3_5_7_11_12_13': 4, '249': 5},
+           'second': {'E:\\VitalikRogalik\important\secret.png': 1, 'algoritm': 2, 'CHALLENGE': 3, '5RGB': 4, '10101': 5},
+           'third': {'Scientia potentia est': 1, '2640': 2, '49837': 3, '1961': 4, '141,43': 5},
+           'fourth': {'224': 1, '11:40': 2, 'journey': 3, '7_1010100': 4, '3336': 5}
+           }
 
 
 @login_manager.user_loader
@@ -62,14 +67,19 @@ def tasks():
         if request.data:
             team = current_user
             data = request.get_json()
-            if data['block_number'] == 1:
-                team.first_task_complete = True
-            elif data['block_number'] == 2:
-                team.second_task_complete = True
-            elif data['block_number'] == 3:
-                team.third_task_complete = True
-            elif data['block_number'] == 4:
-                team.fourth_task_complete = True
+            block_number = data['block_number']
+            answer = data['answer']
+            if (block_number == 'first') and (answer in ANSWERS[block_number]):
+                team.first_block_answer = answer
+            elif block_number == 'second' and answer in ANSWERS[block_number]:
+                team.second_block_answer = answer
+            elif block_number == 'third' and answer in ANSWERS[block_number]:
+                team.third_block_answer = answer
+            elif block_number == 'fourth' and answer in ANSWERS[block_number]:
+                team.fourth_block_answer = answer
+            else:
+                message = 'Неверный ответ!'
+                return redirect(url_for('/tasks', message=message))
             db_sess = db_session.create_session()
             team = db_sess.merge(team)
             db_sess.add(team)
@@ -81,6 +91,13 @@ def tasks():
     else:
         team = current_user
         return render_template('tasks.html', title='Задания', team=team)
+
+
+@app.route('/tasks/<message>', methods=['GET'])
+def get_message(message):
+    print(message)
+    team = current_user
+    return render_template('tasks.html', title='Задания', team=team, message=message)
 
 
 @app.route('/stop_time')

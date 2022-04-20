@@ -16,10 +16,10 @@ class Team(SqlAlchemyBase, UserMixin):
     scores = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     position = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     tasks_done = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    first_task_complete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    second_task_complete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    third_task_complete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    fourth_task_complete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    first_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
+    second_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
+    third_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
+    fourth_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
 
 
 class Task(SqlAlchemyBase):

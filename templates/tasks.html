@@ -74,7 +74,12 @@
     {% else %}
         <h2 class="uk-heading-line uk-text-center"><span><a href="/">Войдите в аккаунт</a></span></h2>
     {% endif %}
-
+    {% if message %}
+        <div class="uk-alert-danger uk-align-center" uk-alert>
+        <a class="uk-alert-close" uk-close></a>
+        <p class="uk-text-center">{{ message }}</p>
+        </div>
+    {% endif %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // конечная дата
@@ -135,7 +140,7 @@
     <script>
         function send_first_block() {
             let data = {
-                'block_number': 1,
+                'block_number': 'first',
                 'answer': document.getElementById("first_block").value
             };
             $.ajax({
@@ -150,7 +155,7 @@
 
         function send_second_block() {
             let data = {
-                'block_number': 2,
+                'block_number': 'second',
                 'answer': document.getElementById("second_block").value
             };
             $.ajax({
@@ -165,7 +170,7 @@
 
         function send_third_block() {
             let data = {
-                'block_number': 3,
+                'block_number': 'third',
                 'answer': document.getElementById("third_block").value
             };
             $.ajax({
@@ -180,7 +185,7 @@
 
         function send_fourth_block() {
             let data = {
-                'block_number': 4,
+                'block_number': 'fourth',
                 'answer': document.getElementById("fourth_block").value
             };
             $.ajax({
