@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, jsonify, after_this_request
+from flask import Flask, render_template, redirect, jsonify, request
 from forms import RegisterForm, TaskForm
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from models import Task, Part
@@ -42,11 +42,11 @@ def main():
                     team.tasks_done = False
                     db_sess.add(team)
                     db_sess.commit()
+                    db_sess.close()
                     login_user(team)
                     return redirect('/tasks')
                 else:
                     login_user(team)
-                    print('Таймер работает')
                     return redirect('/tasks')
             else:
                 return render_template('login.html', title='Вход', form=form,
@@ -56,17 +56,45 @@ def main():
     return render_template('login.html', title='Вход', form=form)
 
 
-@app.route('/tasks')
+@app.route('/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks():
-    team = current_user
-    form = TaskForm()
-    if form.validate_on_submit():
-        answer1 = form.part1_answer.data
-        answer2 = form.part2_answer.data
-        answer3 = form.part3_answer.data
-        answer4 = form.part4_answer.data
-    return render_template('tasks.html', title='Задания', team=team, form=form)
+    if request.method == 'POST':
+        team = current_user
+        data = request.get_json()
+        if data['block_number'] == 1:
+            team.first_task_complete = True
+        if data['block_number'] == 2:
+            team.second_task_complete = True
+        if data['block_number'] == 3:
+            team.third_task_complete = True
+        if data['block_number'] == 4:
+            team.fourth_task_complete = True
+        return render_template('tasks.html', title='Задания', team=team)
+    else:
+        team = current_user
+        return render_template('tasks.html', title='Задания', team=team)
+
+
+# @app.route('/receive_results', methods=['GET', 'POST'])
+# @login_required
+# def receive_results():
+#     if request.method == 'POST':
+#         db_sess = db_session.create_session()
+#         team = current_user
+#         data = request.get_json()
+#         if data['block_number'] == 1:
+#             team.first_task_complete = True
+#         if data['block_number'] == 2:
+#             team.second_task_complete = True
+#         if data['block_number'] == 3:
+#             team.third_task_complete = True
+#         if data['block_number'] == 4:
+#             team.fourth_task_complete = True
+#         db_sess.add(team)
+#         db_sess.commit()
+#         db_sess.close()
+#     return jsonify({'receive': 'ok'})
 
 
 @app.route('/stop_time', methods=['GET'])
@@ -78,6 +106,7 @@ def stop_time():
     team.tasks_done = True
     db_sess.add(team)
     db_sess.commit()
+    db_sess.close()
     print(f'team {team.name} stopped')
     return jsonify({'success': 'OK'})
 

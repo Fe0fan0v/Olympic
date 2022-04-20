@@ -21,13 +21,46 @@
         </nav>
         {% if not team.task_done %}
             {% if team.timer_started %}
-                <div class="timer uk-position-center">
+                <div class="timer uk-text-center uk-margin-top">
                     <div class="timer_items uk-heading-large uk-text-center">
                         <span class="timer_item timer_hours">00</span>
                         <span class="timer_item timer_minutes">00</span>
                         <span class="timer_item timer_seconds">00</span>
                     </div>
                 </div>
+                {#поля отправки заданий#}
+                <form method="post" class="uk-position-bottom-center uk-align-center">
+                    {% if not team.first_task_completed %}
+                        <div class="uk-margin" id="first">
+                            <input class="uk-input uk-form-width-medium" type="text" id="first_block"
+                                   placeholder="Ответ 1 блока">
+                            <button class="uk-button uk-button-primary" id="first_button" onclick="send_first_block()">
+                                Отправить
+                            </button>
+                        </div>
+                    {% endif %}
+                    {% if not team.second_task_completed %}
+                        <div class="uk-margin" id="second">
+                            <input class="uk-input uk-form-width-medium" type="text" id="second_block"
+                                   placeholder="Ответ 2 блока">
+                            <button class="uk-button uk-button-primary" id="second_button">Отправить</button>
+                        </div>
+                    {% endif %}
+                    {% if not team.third_task_completed %}
+                        <div class="uk-margin" id="third">
+                            <input class="uk-input uk-form-width-medium" type="text" id="third_block"
+                                   placeholder="Ответ 3 блока">
+                            <button class="uk-button uk-button-primary" id="third_button">Отправить</button>
+                        </div>
+                    {% endif %}
+                    {% if not team.fourth_task_completed %}
+                        <div class="uk-margin" id="fourth">
+                            <input class="uk-input uk-form-width-medium" type="text" id="fourth_block"
+                                   placeholder="Ответ 4 блока">
+                            <button class="uk-button uk-button-primary" id="fourth_button">Отправить</button>
+                        </div>
+                    {% endif %}
+                </form>
             {% else %}
                 <h1 class="uk-heading-large uk-text-center message">Время вышло.</h1>
             {% endif %}
@@ -90,6 +123,66 @@
             countdownTimer();
             // вызываем функцию countdownTimer каждую секунду
             timerId = setInterval(countdownTimer, 1000);
+
+            // отправка задания из поля
         });
+    </script>
+    <script>
+        function send_first_block() {
+            let data = {
+                'block_number': 1,
+                'answer': document.getElementById("first_block").value
+            };
+            $.ajax({
+                type: "POST",
+                url: "/tasks",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+            });
+        }
+
+        function send_second_block() {
+            let data = {
+                'block_number': 2,
+                'answer': document.getElementById("second_block").value
+            };
+            $.ajax({
+                type: "POST",
+                url: "/tasks",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+            });
+            document.getElementById()
+        }
+
+        function send_third_block() {
+            let data = {
+                'block_number': 3,
+                'answer': document.getElementById("third_block").value
+            };
+            $.ajax({
+                type: "POST",
+                url: "/tasks",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+            });
+        }
+
+        function send_fourth_block() {
+            let data = {
+                'block_number': 4,
+                'answer': document.getElementById("fourth_block").value
+            };
+            $.ajax({
+                type: "POST",
+                url: "/tasks",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: 'json',
+            });
+        }
     </script>
 {% endblock %}
