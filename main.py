@@ -36,15 +36,17 @@ def main():
                 if not team.timer_started:
                     if team.tasks_done:
                         return render_template('login.html', title='Вход', form=form, message='Вы уже сдали задание')
-                    time = datetime.datetime.now() + datetime.timedelta(seconds=10)
+                    time = datetime.datetime.now() + datetime.timedelta(minutes=30)
                     team.deadline = list(map(int, time.strftime("%Y-%m-%d-%H-%M-%S").split("-")))
                     team.timer_started = True
+                    team.tasks_done = False
                     db_sess.add(team)
                     db_sess.commit()
-                    login_user(team, remember=True)
+                    login_user(team)
                     return redirect('/tasks')
                 else:
-                    login_user(team, remember=True)
+                    login_user(team)
+                    print('Таймер работает')
                     return redirect('/tasks')
             else:
                 return render_template('login.html', title='Вход', form=form,

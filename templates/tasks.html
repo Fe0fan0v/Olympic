@@ -19,7 +19,7 @@
                 </ul>
             </div>
         </nav>
-        {% if team.task_done %}
+        {% if not team.task_done %}
             {% if team.timer_started %}
                 <div class="timer uk-position-center">
                     <div class="timer_items uk-heading-large uk-text-center">
@@ -29,10 +29,10 @@
                     </div>
                 </div>
             {% else %}
-                <h1 class="uk-heading-large uk-text-center message">Время вышло</h1>
+                <h1 class="uk-heading-large uk-text-center message">Время вышло.</h1>
             {% endif %}
         {% else %}
-            <h1 class="uk-heading-large uk-text-center message">Время вышло</h1>
+            <h1 class="uk-heading-large uk-text-center message">Время вышло. Задание выполнено.</h1>
         {% endif %}
     {% else %}
         <h2 class="uk-heading-line uk-text-center"><span><a href="/">Войдите в аккаунт</a></span></h2>
@@ -40,12 +40,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // конечная дата, например 1 июля 2021
+            // конечная дата
             const deadline = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(),
-                {{ team.deadline[3] }}, {{ team.deadline[4] }}, new Date().getSeconds());
+                {{ team.deadline[3] }}, {{ team.deadline[4] }}, {{ team.deadline[5] }});
+
             // id таймера
             let timerId = null;
-            const stop_text = 'Время вышло';
+
             // склонение числительных
             function declensionNum(num, words) {
                 return words[(num % 100 > 4 && num % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(num % 10 < 5) ? num % 10 : 5]];
@@ -60,6 +61,7 @@
                     document.getElementsByClassName('timer')[0].style.display = 'none';
                     var h = document.createElement('h1');
                     h.className = 'uk-heading-large uk-text-center';
+                    h.innerHTML = 'Время истекло';
                     document.body.appendChild(h);
                 }
                 const hours = diff > 0 ? Math.floor(diff / 1000 / 60 / 60) % 24 : 0;
