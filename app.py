@@ -212,6 +212,25 @@ def download():
         return send_file(file_path, as_attachment=True)
 
 
+@app.route('/reload', methods=['GET'])
+def reload():
+    db_sess = db_session.create_session()
+    teams = db_sess.query(Team).all()
+    for team in teams:
+        team.scores = 0
+        team.last_answer = None
+        team.first_block_answer = None
+        team.second_block_answer = None
+        team.third_block_answer = None
+        team.fourth_block_answer = None
+        team.timer_started = False
+        team.deadline = None
+        team.tasks_done = False
+        db_sess.add(team)
+    db_sess.commit()
+    return redirect('/get_results')
+
+
 @app.route('/get_results', methods=['POST', 'GET'])
 @login_required
 def get_results():
