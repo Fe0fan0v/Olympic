@@ -9,9 +9,23 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Войти')
 
 
-class TaskForm(FlaskForm):
-    part1_answer = StringField('Введите код первого раздела')
-    part2_answer = StringField('Введите код второго раздела')
-    part3_answer = StringField('Введите код третьего раздела')
-    part4_answer = StringField('Введите код четвертого раздела')
+class Task1(FlaskForm):
+    answer = StringField('Ответ 1 блока', validators=[DataRequired()])
     submit = SubmitField('Отправить')
+
+
+class Task2(FlaskForm):
+    answer = StringField('Ответ 2 блока', validators=[DataRequired()])
+    submit = SubmitField('Отправить')
+
+
+class Task3(FlaskForm):
+    answer = StringField('Ответ 3 блока', validators=[DataRequired()])
+    submit = SubmitField('Отправить')
+
+
+class Task4(FlaskForm):
+    answer = StringField('Ответ 4 блока', validators=[DataRequired()])
+    submit = SubmitField('Отправить')
+
+

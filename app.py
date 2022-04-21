@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, jsonify, request, send_file, url_for
-from forms import RegisterForm
+from flask import Flask, render_template, redirect, jsonify, request, send_file, url_for, json, make_response
+from forms import RegisterForm, Task1, Task2, Task3, Task4
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from models import Task, Part
 from data import db_session
@@ -16,10 +16,23 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init("base.db")
 ANSWERS = {'first': {'cltkfkltkjuekzqcvtkj': 1, '13240': 2, '57.92.113.225': 3, '2_3_5_7_11_12_13': 4, '249': 5},
-           'second': {'E:\\VitalikRogalik\important\secret.png': 1, 'algoritm': 2, 'CHALLENGE': 3, '5RGB': 4, '10101': 5},
+           'second': {'E:\\VitalikRogalik\important\secret.png': 1, 'algoritm': 2, 'CHALLENGE': 3, '5RGB': 4,
+                      '10101': 5},
            'third': {'Scientia potentia est': 1, '2640': 2, '49837': 3, '1961': 4, '141,43': 5},
            'fourth': {'224': 1, '11:40': 2, 'journey': 3, '7_1010100': 4, '3336': 5}
            }
+
+
+def save(team):
+    db_sess = db_session.create_session()
+    team = db_sess.merge(team)
+    db_sess.add(team)
+    db_sess.commit()
+
+
+def clear_inputs(tasks):
+    for i in tasks:
+        i.answer.data = ''
 
 
 @login_manager.user_loader
@@ -48,7 +61,7 @@ def main():
                     db_sess.add(team)
                     db_sess.commit()
                     login_user(team)
-                    return redirect('/download')
+                    return redirect('/tasks')
                 else:
                     login_user(team)
                     return redirect('/tasks')
@@ -63,41 +76,66 @@ def main():
 @app.route('/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks():
-    if request.method == 'POST':
-        if request.data:
-            team = current_user
-            data = request.get_json()
-            block_number = data['block_number']
-            answer = data['answer']
-            if (block_number == 'first') and (answer in ANSWERS[block_number]):
-                team.first_block_answer = answer
-            elif block_number == 'second' and answer in ANSWERS[block_number]:
-                team.second_block_answer = answer
-            elif block_number == 'third' and answer in ANSWERS[block_number]:
-                team.third_block_answer = answer
-            elif block_number == 'fourth' and answer in ANSWERS[block_number]:
-                team.fourth_block_answer = answer
-            else:
-                message = 'Неверный ответ!'
-                return redirect(url_for('/tasks', message=message))
-            db_sess = db_session.create_session()
-            team = db_sess.merge(team)
-            db_sess.add(team)
-            db_sess.commit()
-            return redirect('/tasks')
-        else:
-            team = current_user
-            return render_template('tasks.html', title='Задания', team=team)
-    else:
-        team = current_user
-        return render_template('tasks.html', title='Задания', team=team)
-
-
-@app.route('/tasks/<message>', methods=['GET'])
-def get_message(message):
-    print(message)
+    task1, task2, task3, task4 = Task1(), Task2(), Task3(), Task4()
+    all_tasks = (task1, task2, task3, task4)
     team = current_user
-    return render_template('tasks.html', title='Задания', team=team, message=message)
+    if task1.validate_on_submit():
+        answer = task1.answer.data
+        if answer in ANSWERS['first']:
+            team.first_block_answer = answer
+            message = 'Ответ принят'
+            clear_inputs(all_tasks)
+            save(team)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+        else:
+            message = 'Ответ неверный'
+            clear_inputs(all_tasks)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+    if task2.validate_on_submit():
+        answer = task2.answer.data
+        if answer in ANSWERS['second']:
+            team.second_block_answer = answer
+            message = 'Ответ принят'
+            clear_inputs(all_tasks)
+            save(team)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+        else:
+            message = 'Ответ неверный'
+            clear_inputs(all_tasks)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+    if task3.validate_on_submit():
+        answer = task3.answer.data
+        if answer in ANSWERS['third']:
+            team.third_block_answer = answer
+            message = 'Ответ принят'
+            clear_inputs(all_tasks)
+            save(team)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+        else:
+            message = 'Ответ неверный'
+            clear_inputs(all_tasks)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+    if task4.validate_on_submit():
+        answer = task4.answer.data
+        if answer in ANSWERS['fourth']:
+            team.fourth_block_answer = answer
+            message = 'Ответ принят'
+            clear_inputs(all_tasks)
+            save(team)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+        else:
+            message = 'Ответ неверный'
+            clear_inputs(all_tasks)
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4)
+    return render_template('tasks.html', title='Задания', team=team, task1=task1, task2=task2, task3=task3, task4=task4)
 
 
 @app.route('/stop_time')
