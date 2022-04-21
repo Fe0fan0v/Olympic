@@ -36,40 +36,41 @@
                 </div>
 
                 {#формы отправки заданий#}
-                <div class="uk-position-bottom-center uk-align-center">
+                <div class="uk-position-bottom-center uk-align-center" id="form">
                     <form name="task1" method="post" class="uk-margin">
                         {{ task1.csrf_token }}
                         {{ task1.hidden_tag() }}
                         <div class="uk-margin">
-                            {{ task1.answer(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 1 блока") }}
-                            {{ task1.submit(class="uk-button uk-button-primary") }}
+                            {{ task1.answer1(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 1 блока") }}
+                            {{ task1.submit1(class="uk-button uk-button-primary") }}
                         </div>
                     </form>
                     <form name="task2" method="post" class="uk-margin">
                         {{ task2.csrf_token }}
                         {{ task2.hidden_tag() }}
                         <div class="uk-margin">
-                            {{ task2.answer(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 2 блока") }}
-                            {{ task2.submit(class="uk-button uk-button-primary") }}
+                            {{ task2.answer2(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 2 блока") }}
+                            {{ task2.submit2(class="uk-button uk-button-primary") }}
                         </div>
                     </form>
                     <form name="task3" method="post" class="uk-margin">
                         {{ task3.csrf_token }}
                         {{ task3.hidden_tag() }}
                         <div class="uk-margin">
-                            {{ task3.answer(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 3 блока") }}
-                            {{ task3.submit(class="uk-button uk-button-primary") }}
+                            {{ task3.answer3(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 3 блока") }}
+                            {{ task3.submit3(class="uk-button uk-button-primary") }}
                         </div>
                     </form>
                     <form name="task4" method="post" class="uk-margin">
                         {{ task4.csrf_token }}
                         {{ task4.hidden_tag() }}
                         <div class="uk-margin">
-                            {{ task4.answer(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 4 блока") }}
-                            {{ task4.submit(class="uk-button uk-button-primary") }}
+                            {{ task4.answer4(class="uk-input uk-form-width-medium", type="text", placeholder="Ответ 4 блока") }}
+                            {{ task4.submit4(class="uk-button uk-button-primary") }}
                         </div>
                     </form>
                 </div>
+
             {% else %}
                 <h1 class="uk-heading-large uk-text-center message">Время вышло.</h1>
             {% endif %}
@@ -80,17 +81,22 @@
         <h2 class="uk-heading-line uk-text-center"><span><a href="/">Войдите в аккаунт</a></span></h2>
     {% endif %}
     {% if message %}
-        {% if 'принят' in message %}
-            <div class="uk-alert-success uk-align-center" uk-alert>
-            <a class="uk-alert-close" uk-close></a>
-            <p class="uk-text-center">{{ message }}</p>
-        </div>
+        {% if 'уже' in message %}
+            <div class="uk-alert-warning uk-align-center uk-width-2xlarge" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p class="uk-text-center">{{ message }}</p>
+            </div>
+        {% elif 'принят' in message %}
+            <div class="uk-alert-success uk-align-center uk-width-2xlarge" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p class="uk-text-center">{{ message }}</p>
+            </div>
         {% else %}
-        <div class="uk-alert-danger uk-align-center" uk-alert>
-            <a class="uk-alert-close" uk-close></a>
-            <p class="uk-text-center">{{ message }}</p>
-        </div>
-         {% endif %}
+            <div class="uk-alert-danger uk-align-center uk-width-2xlarge" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p class="uk-text-center">{{ message }}</p>
+            </div>
+        {% endif %}
     {% endif %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -112,8 +118,8 @@
                 if (diff <= 0) {
                     clearInterval(timerId);
                     stopRequest();
-                    document.getElementById('send_form').style.display = 'none';
                     document.getElementsByClassName('timer')[0].style.display = 'none';
+                    document.getElementById('form').style.display = 'none';
                     var h = document.createElement('h1');
                     h.className = 'uk-heading-large uk-text-center';
                     h.innerHTML = 'Время истекло';

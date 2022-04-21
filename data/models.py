@@ -11,7 +11,7 @@ class Team(SqlAlchemyBase, UserMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String)
     school = sqlalchemy.Column(sqlalchemy.String)
-    deadline = sqlalchemy.Column(MutableList.as_mutable(PickleType), default=[])
+    deadline = sqlalchemy.Column(MutableList.as_mutable(PickleType), default=None)
     timer_started = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     scores = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     position = sqlalchemy.Column(sqlalchemy.Integer, default=0)
@@ -20,3 +20,4 @@ class Team(SqlAlchemyBase, UserMixin):
     second_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     third_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     fourth_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
+    last_answer = sqlalchemy.Column(sqlalchemy.DATETIME, default=None)

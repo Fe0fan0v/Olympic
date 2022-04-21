@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1 class="uk-heading-line uk-text-center"><span>{{ title }}</span></h1>
+    {% if current_user.is_authenticated %}
+    <nav class="uk-navbar-container uk-margin" uk-navbar>
+        <div class="uk-navbar-left">
+            <a class="uk-navbar-item uk-logo" href="#">{{ current_user.name }}</a>
+        </div>
+        <div class="uk-navbar-right">
+            <ul class="uk-navbar-nav">
+                <li>
+                    <a href="/logout">
+                        <span class="uk-icon uk-margin-small-right" uk-icon="icon: sign-out"></span>
+                        Выйти
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <table class="uk-table uk-table-striped">
+        <thead>
+        <tr>
+            <th>Название команды</th>
+            <th>Баллы</th>
+            <th>Время сдачи последнего задания</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for team in team_list %}
+            <tr>
+                <td>{{ team.name }}</td>
+                <td>{{ team.scores }}</td>
+                <td>{{ team.last_answer.strftime('%H:%M:%S') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

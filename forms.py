@@ -10,22 +10,33 @@ class RegisterForm(FlaskForm):
 
 
 class Task1(FlaskForm):
-    answer = StringField('Ответ 1 блока', validators=[DataRequired()])
-    submit = SubmitField('Отправить')
+    answer1 = StringField('Ответ 1 блока', validators=[DataRequired()])
+    submit1 = SubmitField('Отправить')
+
+    def clear(self):
+        self.answer1.data = ''
 
 
 class Task2(FlaskForm):
-    answer = StringField('Ответ 2 блока', validators=[DataRequired()])
-    submit = SubmitField('Отправить')
+    answer2 = StringField('Ответ 2 блока', validators=[DataRequired()])
+    submit2 = SubmitField('Отправить')
+
+    def clear(self):
+        self.answer2.data = ''
 
 
 class Task3(FlaskForm):
-    answer = StringField('Ответ 3 блока', validators=[DataRequired()])
-    submit = SubmitField('Отправить')
+    answer3 = StringField('Ответ 3 блока', validators=[DataRequired()])
+    submit3 = SubmitField('Отправить')
+
+    def clear(self):
+        self.answer3.data = ''
 
 
 class Task4(FlaskForm):
-    answer = StringField('Ответ 4 блока', validators=[DataRequired()])
-    submit = SubmitField('Отправить')
+    answer4 = StringField('Ответ 4 блока', validators=[DataRequired()])
+    submit4 = SubmitField('Отправить')
 
+    def clear(self):
+        self.answer4.data = ''
 
