@@ -20,3 +20,4 @@ class Team(SqlAlchemyBase, UserMixin):
     second_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     third_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     fourth_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
+    last_answer = sqlalchemy.Column(sqlalchemy.DATETIME, default=None)
