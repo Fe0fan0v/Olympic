@@ -12,7 +12,20 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-db_session.global_init("base.db")
+
+
+def create_table():
+    sess = db_session.create_session()
+    teams = [['admin', 'itcube'], ['Prosti esli', '4'], ['Za Россию', '6'], ['Минус три богатыря', '7'],
+             ['Комби', '10'],
+             ['Отряд Страуструпа', '16'], ['Стрела', '17'], ['Питекантропы', '18'], ['Победа', '19']]
+    for name, school in teams:
+        if not sess.query(Team).filter(Team.name == name).first():
+            team = Team(name=name, school=school)
+            sess.add(team)
+    sess.commit()
+
+
 ANSWERS = {'first': {'cltkfkltkjuekzqcvtkj': 1, '13240': 2, '57.92.113.225': 3, '2_3_5_7_11_12_13': 4, '249': 5},
            'second': {r'E:\\VitalikRogalik\important\secret.png': 1, 'algoritm': 2, 'CHALLENGE': 3, '5RGB': 4,
                       '10101': 5},
@@ -209,4 +222,6 @@ def get_results():
 
 
 if __name__ == '__main__':
+    db_session.global_init('base.db')
+    create_table()
     app.run()
