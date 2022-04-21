@@ -5,6 +5,7 @@ from data import db_session
 from data.models import Team
 import datetime
 from flask_cors import CORS
+from waitress import serve
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super_duper_secret_key'
@@ -224,4 +225,4 @@ def get_results():
 if __name__ == '__main__':
     db_session.global_init('base.db')
     create_table()
-    app.run()
+    serve(app, host='0.0.0.0', port=5000)
