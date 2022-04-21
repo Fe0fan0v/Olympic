@@ -20,12 +20,3 @@ class Team(SqlAlchemyBase, UserMixin):
     second_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     third_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
     fourth_block_answer = sqlalchemy.Column(sqlalchemy.String, default=None)
-
-
-class Task(SqlAlchemyBase):
-    __tablename__ = 'tasks'
-
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String)
-    price = sqlalchemy.Column(sqlalchemy.Integer)
-    part = sqlalchemy.Column(sqlalchemy.String)

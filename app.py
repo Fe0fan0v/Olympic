@@ -1,9 +1,8 @@
-from flask import Flask, render_template, redirect, jsonify, request, send_file, url_for, json, make_response
+from flask import Flask, render_template, redirect, jsonify, request, send_file
 from forms import RegisterForm, Task1, Task2, Task3, Task4
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
-from models import Task, Part
 from data import db_session
-from data.models import Team, Task
+from data.models import Team
 import datetime
 from flask_cors import CORS
 
