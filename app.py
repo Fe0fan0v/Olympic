@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, jsonify, request, send_file, make_response
-from forms import RegisterForm, Task1, Task2, Task3, Task4
+from forms import RegisterForm, Task1, Task2, Task3, Task4, Final
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from data import db_session
 from data.models import Team
@@ -31,7 +31,8 @@ ANSWERS = {'first': {'cltkfkltkjuekzqcvtkj': 1, '13240': 2, '57.92.113.225': 3, 
            'second': {r'E:\\VitalikRogalik\important\secret.png': 1, 'algoritm': 2, 'CHALLENGE': 3, '5RGB': 4,
                       '10101': 5},
            'third': {'Scientia potentia est': 1, '2640': 2, '49837': 3, '1961': 4, '141,43': 5},
-           'fourth': {'224': 1, '11:40': 2, 'journey': 3, '7_1010100': 4, '3336': 5}
+           'fourth': {'224': 1, '11:40': 2, 'journey': 3, '7_1010100': 4, '3336': 5},
+           'final': {'111': 10}
            }
 
 
@@ -44,6 +45,8 @@ def check_progress(team):
         team.scores += ANSWERS['third'][team.third_block_answer]
     if team.fourth_block_answer:
         team.scores += ANSWERS['fourth'][team.fourth_block_answer]
+    if team.final_block_answer:
+        team.scores += ANSWERS['final'][team.final_block_answer]
     return team.scores if team.scores else 0
 
 
@@ -98,7 +101,7 @@ def main():
 @app.route('/tasks', methods=['GET', 'POST'])
 @login_required
 def tasks():
-    task1, task2, task3, task4 = Task1(), Task2(), Task3(), Task4()
+    task1, task2, task3, task4, final = Task1(), Task2(), Task3(), Task4(), Final()
     team = current_user
     if task1.validate_on_submit():
         answer = task1.answer1.data
@@ -114,12 +117,12 @@ def tasks():
                 message = 'Такой ответ уже принят'
                 task1.clear()
             return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                                   task3=task3, task4=task4)
+                                   task3=task3, task4=task4, final=final)
         else:
             message = 'Ответ неверный'
             task1.clear()
             return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                                   task3=task3, task4=task4)
+                                   task3=task3, task4=task4, final=final)
     if task2.validate_on_submit():
         answer = task2.answer2.data
         if answer in ANSWERS['second']:
@@ -134,12 +137,12 @@ def tasks():
                 message = 'Такой ответ уже принят'
                 task2.clear()
             return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                                   task3=task3, task4=task4)
+                                   task3=task3, task4=task4, final=final)
         else:
             message = 'Ответ неверный'
             task2.clear()
         return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                               task3=task3, task4=task4)
+                               task3=task3, task4=task4, final=final)
     if task3.validate_on_submit():
         answer = task3.answer3.data
         if answer in ANSWERS['third']:
@@ -154,12 +157,12 @@ def tasks():
                 message = 'Такой ответ уже принят'
                 task3.clear()
             return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                                   task3=task3, task4=task4)
+                                   task3=task3, task4=task4, final=final)
         else:
             message = 'Ответ неверный'
             task3.clear()
         return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                               task3=task3, task4=task4)
+                               task3=task3, task4=task4, final=final)
 
     if task4.validate_on_submit():
         answer = task4.answer4.data
@@ -175,15 +178,35 @@ def tasks():
                 message = 'Такой ответ уже принят'
                 task4.clear()
             return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                                   task3=task3, task4=task4)
+                                   task3=task3, task4=task4, final=final)
         else:
             message = 'Ответ неверный'
             task4.clear()
         return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
-                               task3=task3, task4=task4)
+                               task3=task3, task4=task4, final=final)
 
-    return render_template('tasks.html', title='Задания', team=team, task1=task1, task2=task2,
-                           task3=task3, task4=task4)
+    if final.validate_on_submit():
+        answer = final.final_answer.data
+        if answer in ANSWERS['final']:
+            if ANSWERS['final'][answer] > ANSWERS['final'].get(team.final_block_answer, 0):
+                team.final_block_answer = answer
+                message = 'Ответ принят'
+                team.scores = check_progress(team)
+                team.last_answer = datetime.datetime.now()
+                final.clear()
+                save(team)
+            else:
+                message = 'Такой ответ уже принят'
+                final.clear()
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4, final=final)
+        else:
+            message = 'Ответ неверный'
+            final.clear()
+            return render_template('tasks.html', title='Задания', team=team, message=message, task1=task1, task2=task2,
+                                   task3=task3, task4=task4, final=final)
+    return render_template('tasks.html', title='Задания', team=team, task1=task1, task2=task2, task3=task3, task4=task4,
+                           final=final)
 
 
 @app.route('/stop_time')
@@ -223,6 +246,7 @@ def reload():
         team.second_block_answer = None
         team.third_block_answer = None
         team.fourth_block_answer = None
+        team.final_block_answer = None
         team.timer_started = False
         team.deadline = None
         team.tasks_done = False

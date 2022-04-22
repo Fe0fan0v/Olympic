@@ -69,6 +69,14 @@
                             {{ task4.submit4(class="uk-button uk-button-primary") }}
                         </div>
                     </form>
+                    <form name="final" method="post" class="uk-margin">
+                        {{ final.csrf_token }}
+                        {{ final.hidden_tag() }}
+                        <div class="uk-margin">
+                            {{ final.final_answer(class="uk-input uk-form-width-medium", type="text", placeholder="Финальный ответ") }}
+                            {{ final.final_submit(class="uk-button uk-button-primary") }}
+                        </div>
+                    </form>
                 </div>
 
             {% else %}
