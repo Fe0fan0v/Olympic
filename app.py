@@ -79,7 +79,7 @@ def main():
                 if not team.timer_started:
                     if team.tasks_done:
                         return render_template('login.html', title='Вход', form=form, message='Вы уже сдали задание')
-                    time = datetime.datetime.now() + datetime.timedelta(minutes=2)
+                    time = datetime.datetime.now() + datetime.timedelta(hours=1, minutes=30)
                     team.deadline = list(map(int, time.strftime("%Y-%m-%d-%H-%M-%S").split("-")))
                     team.timer_started = True
                     team.tasks_done = False
