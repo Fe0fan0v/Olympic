@@ -40,3 +40,11 @@ class Task4(FlaskForm):
     def clear(self):
         self.answer4.data = ''
 
+
+class Final(FlaskForm):
+    final_answer = StringField('Финальный ответ', validators=[DataRequired()])
+    final_submit = SubmitField('Отправить')
+
+    def clear(self):
+        self.final_answer.data = ''
+
